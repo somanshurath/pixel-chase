@@ -1,0 +1,4 @@
+[submodule "external/Walnut"]
+	path = external/Walnut
+	url = https://github.com/StudioCherno/Walnut.git
+	branch = dev
