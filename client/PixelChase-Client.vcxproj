@@ -78,7 +78,7 @@
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>YAML_CPP_STATIC_DEFINE;WL_PLATFORM_WINDOWS;WL_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>IMGUI_DEFINE_MATH_OPERATORS;YAML_CPP_STATIC_DEFINE;WL_PLATFORM_WINDOWS;WL_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\common\src;..\external\Walnut\vendor\imgui;..\external\Walnut\vendor\glfw\include;..\external\Walnut\vendor\glm;..\external\Walnut\Walnut\Source;..\external\Walnut\Walnut\Platform\GUI;C:\VulkanSDK\1.4.304.0\Include;..\external\Walnut\vendor\spdlog\include;..\external\Walnut\vendor\yaml-cpp\include;..\external\Walnut\Walnut-Modules\Walnut-Networking\Source;..\external\Walnut\Walnut-Modules\Walnut-Networking\vendor\GameNetworkingSockets\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <Optimization>Disabled</Optimization>
@@ -101,7 +101,7 @@ IF EXIST "..\external\Walnut\Walnut-Modules\Walnut-Networking\vendor\GameNetwork
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>YAML_CPP_STATIC_DEFINE;WL_PLATFORM_WINDOWS;WL_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>IMGUI_DEFINE_MATH_OPERATORS;YAML_CPP_STATIC_DEFINE;WL_PLATFORM_WINDOWS;WL_RELEASE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\common\src;..\external\Walnut\vendor\imgui;..\external\Walnut\vendor\glfw\include;..\external\Walnut\vendor\glm;..\external\Walnut\Walnut\Source;..\external\Walnut\Walnut\Platform\GUI;C:\VulkanSDK\1.4.304.0\Include;..\external\Walnut\vendor\spdlog\include;..\external\Walnut\vendor\yaml-cpp\include;..\external\Walnut\Walnut-Modules\Walnut-Networking\Source;..\external\Walnut\Walnut-Modules\Walnut-Networking\vendor\GameNetworkingSockets\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Full</Optimization>
@@ -130,7 +130,7 @@ IF EXIST "..\external\Walnut\Walnut-Modules\Walnut-Networking\vendor\GameNetwork
     <ClCompile>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <PreprocessorDefinitions>YAML_CPP_STATIC_DEFINE;WL_PLATFORM_WINDOWS;WL_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>IMGUI_DEFINE_MATH_OPERATORS;YAML_CPP_STATIC_DEFINE;WL_PLATFORM_WINDOWS;WL_DIST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\common\src;..\external\Walnut\vendor\imgui;..\external\Walnut\vendor\glfw\include;..\external\Walnut\vendor\glm;..\external\Walnut\Walnut\Source;..\external\Walnut\Walnut\Platform\GUI;C:\VulkanSDK\1.4.304.0\Include;..\external\Walnut\vendor\spdlog\include;..\external\Walnut\vendor\yaml-cpp\include;..\external\Walnut\Walnut-Modules\Walnut-Networking\Source;..\external\Walnut\Walnut-Modules\Walnut-Networking\vendor\GameNetworkingSockets\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>None</DebugInformationFormat>
       <Optimization>Full</Optimization>
@@ -156,7 +156,15 @@ IF EXIST "..\external\Walnut\Walnut-Modules\Walnut-Networking\vendor\GameNetwork
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\pixelChase.cpp">
+    <ClInclude Include="src\ClientLayer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\App.cpp">
+      <ExternalWarningLevel>Level3</ExternalWarningLevel>
+      <ExternalWarningLevel>Level3</ExternalWarningLevel>
+      <ExternalWarningLevel>Level3</ExternalWarningLevel>
+    </ClCompile>
+    <ClCompile Include="src\ClientLayer.cpp">
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>
       <ExternalWarningLevel>Level3</ExternalWarningLevel>

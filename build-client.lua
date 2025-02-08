@@ -8,6 +8,8 @@ startproject "PixelChase-Client"
 filter "system:windows"
 buildoptions {"/EHsc", "/Zc:preprocessor", "/Zc:__cplusplus", "/utf-8"}
 
+defines {"IMGUI_DEFINE_MATH_OPERATORS"}
+
 -- Directories
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 WalnutNetworkingBinDir =
