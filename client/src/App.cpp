@@ -1,7 +1,6 @@
-#include "Walnut/Application.h"
-#include "Walnut/EntryPoint.h"
-
 #include "ClientLayer.h"
+
+#include "Walnut/EntryPoint.h"
 
 Walnut::Application *Walnut::CreateApplication(int argc, char **argv)
 {
@@ -9,6 +8,8 @@ Walnut::Application *Walnut::CreateApplication(int argc, char **argv)
 	spec.Name = "Pixel Chase";
 	spec.CustomTitlebar = false;
 	spec.UseDockspace = false;
+	spec.Height = 640;
+	spec.Width = 1280;
 
 	Walnut::Application *app = new Walnut::Application(spec);
 	app->PushLayer<PixelChase::ClientLayer>();
