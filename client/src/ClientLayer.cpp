@@ -27,7 +27,7 @@ namespace PixelChase
 
     void ClientLayer::OnAttach()
     {
-        s_ScratchBuffer.Allocate(1024 * 1024 * 10); // 10MB
+        s_ScratchBuffer.Allocate(1024 * 1024 * 30); // 10MB
 
         m_Client.SetDataReceivedCallback([this](const Walnut::Buffer buffer)
                                          { OnDataReceived(buffer); });
@@ -78,6 +78,18 @@ namespace PixelChase
         if (status == Walnut::Client::ConnectionStatus::Connected)
         {
             DrawRect(m_PlayerPosition, 100, 100, IM_COL32(255, 0, 0, 255));
+
+            m_PlayerDataMutex.lock();
+            std::map<uint32_t, PlayerData> playerData = m_PlayerData;
+            m_PlayerDataMutex.unlock();
+
+            for (auto &[id, data] : playerData)
+            {
+                if (id == m_PlayerID)
+                    continue;
+
+                DrawRect(data.Position, 100, 100, IM_COL32(0, 255, 0, 255));
+            }
         }
         else
         {
@@ -129,11 +141,19 @@ namespace PixelChase
         {
         case PacketType::ClientConnect:
         {
+            uint32_t idFromServer;
+            stream.ReadRaw<uint32_t>(idFromServer);
             WL_INFO_TAG("Client", "Connected to server");
+            WL_INFO_TAG("Client", "Assigned ID: {}", idFromServer);
+            WL_INFO_TAG("Client", "Our ID: {}", m_Client.GetID());
+            m_PlayerID = idFromServer;
             break;
         }
         case PacketType::ClientUpdate:
         {
+            m_PlayerDataMutex.lock();
+            stream.ReadMap(m_PlayerData);
+            m_PlayerDataMutex.unlock();
             break;
         }
         break;

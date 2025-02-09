@@ -5,6 +5,9 @@
 
 #include "HeadlessConsole.h"
 
+#include <map>
+#include <glm/glm.hpp>
+
 namespace PixelChase
 {
 	class ServerLayer : public Walnut::Layer
@@ -17,7 +20,6 @@ namespace PixelChase
 
 	private:
 		void OnConsoleMessage(std::string_view message);
-
 		void OnClientConnected(const Walnut::ClientInfo &clientInfo);
 		void OnClientDisconnected(const Walnut::ClientInfo &clientInfo);
 		void OnDataReceived(const Walnut::ClientInfo &clientInfo, const Walnut::Buffer buffer);
@@ -25,5 +27,14 @@ namespace PixelChase
 	private:
 		HeadlessConsole m_Console;
 		Walnut::Server m_Server{8192};
+
+		struct PlayerData
+		{
+			glm::vec2 Position;
+			glm::vec2 Velocity;
+		};
+
+		std::mutex m_PlayerDataMutex;
+		std::map<uint32_t, PlayerData> m_PlayerData;
 	};
 }

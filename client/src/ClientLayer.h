@@ -6,6 +6,7 @@
 #include "Walnut/Networking/Client.h"
 
 #include <glm/glm.hpp>
+#include <map>
 
 namespace PixelChase
 {
@@ -28,5 +29,15 @@ namespace PixelChase
         int m_ServerConnAttempts = 0;
         Walnut::Client m_Client;
         uint32_t m_ClientID = 0;
+        uint32_t m_PlayerID = 0;
+
+        struct PlayerData
+        {
+            glm::vec2 Position;
+            glm::vec2 Velocity;
+        };
+
+        std::mutex m_PlayerDataMutex;
+        std::map<uint32_t, PlayerData> m_PlayerData;
     };
 }

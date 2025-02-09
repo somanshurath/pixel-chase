@@ -12,7 +12,7 @@ namespace PixelChase
 
 	void ServerLayer::OnAttach()
 	{
-		s_ScratchBuffer.Allocate(1024 * 1024 * 10); // 10MB
+		s_ScratchBuffer.Allocate(1024 * 1024 * 30); // 10MB
 
 		m_Console.SetMessageSendCallback([this](std::string_view message)
 										 { OnConsoleMessage(message); });
@@ -32,6 +32,15 @@ namespace PixelChase
 
 	void ServerLayer::OnUpdate(float ts)
 	{
+		Walnut::BufferStreamWriter stream(s_ScratchBuffer);
+		m_PlayerDataMutex.lock();
+		{
+			stream.WriteRaw(PacketType::ClientUpdate);
+			stream.WriteMap(m_PlayerData);
+		}
+		m_PlayerDataMutex.unlock();
+
+		m_Server.SendBufferToAllClients(stream.GetBuffer());
 	}
 
 	void ServerLayer::OnUIRender()
@@ -73,11 +82,14 @@ namespace PixelChase
 		{
 		case PacketType::ClientUpdate:
 		{
-			glm::vec2 pos, vel;
-			stream.ReadRaw<glm::vec2>(pos);
-			stream.ReadRaw<glm::vec2>(vel);
-
-			WL_INFO_TAG("Server", "ClientUpdate: ID: {}, Pos: ({}, {}), Vel: ({}, {})", clientInfo.ID, pos.x, pos.y, vel.x, vel.y);
+			m_PlayerDataMutex.lock();
+			{
+				PlayerData &playerData = m_PlayerData[clientInfo.ID];
+				stream.ReadRaw<glm::vec2>(playerData.Position);
+				stream.ReadRaw<glm::vec2>(playerData.Velocity);
+				WL_INFO_TAG("Server", "ID: {}, Pos: ({}, {}), Vel: ({}, {})", clientInfo.ID, playerData.Position.x, playerData.Position.y, playerData.Velocity.x, playerData.Velocity.y);
+			}
+			m_PlayerDataMutex.unlock();
 
 			break;
 		}
