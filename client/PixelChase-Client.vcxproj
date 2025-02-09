@@ -157,6 +157,7 @@ IF EXIST "..\external\Walnut\Walnut-Modules\Walnut-Networking\vendor\GameNetwork
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\ClientLayer.h" />
+    <ClInclude Include="src\layout\ControlCenterer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\App.cpp">

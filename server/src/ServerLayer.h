@@ -18,7 +18,12 @@ namespace PixelChase
 	private:
 		void OnConsoleMessage(std::string_view message);
 
+		void OnClientConnected(const Walnut::ClientInfo &clientInfo);
+		void OnClientDisconnected(const Walnut::ClientInfo &clientInfo);
+		void OnDataReceived(const Walnut::ClientInfo &clientInfo, const Walnut::Buffer buffer);
+
 	private:
 		HeadlessConsole m_Console;
+		Walnut::Server m_Server{8192};
 	};
 }

@@ -7,8 +7,15 @@
 #include "misc/cpp/imgui_stdlib.h"
 #include <Walnut/ImGui/ImGuiTheme.h>
 
+#include "Walnut/Serialization/BufferStream.h"
+#include "ServerPacket.h"
+
+#include "./layout/ControlCenterer.h"
+
 namespace PixelChase
 {
+    static Walnut::Buffer s_ScratchBuffer;
+
     static void DrawRect(glm::vec2 rectPos, float width, float height, int color)
     {
         ImDrawList *drawList = ImGui::GetBackgroundDrawList();
@@ -20,6 +27,8 @@ namespace PixelChase
 
     void ClientLayer::OnAttach()
     {
+        s_ScratchBuffer.Allocate(1024 * 1024 * 10); // 10MB
+
         m_Client.SetDataReceivedCallback([this](const Walnut::Buffer buffer)
                                          { OnDataReceived(buffer); });
     }
@@ -55,6 +64,12 @@ namespace PixelChase
 
         m_PlayerPosition += m_PlayerVelocity * ts;
         m_PlayerVelocity = glm::mix(m_PlayerVelocity, glm::vec2(0.0f), 0.3f);
+
+        Walnut::BufferStreamWriter stream(s_ScratchBuffer);
+        stream.WriteRaw(PacketType::ClientUpdate);
+        stream.WriteRaw<glm::vec2>(m_PlayerPosition);
+        stream.WriteRaw<glm::vec2>(m_PlayerVelocity);
+        m_Client.SendBuffer(stream.GetBuffer());
     }
 
     void ClientLayer::OnUIRender()
@@ -69,29 +84,35 @@ namespace PixelChase
             bool readOnly = status != Walnut::Client::ConnectionStatus::Disconnected;
 
             ImGui::Begin("Connect to Server");
-            ImGui::InputText("Server Address", &m_ServerAddress, ImGuiInputTextFlags_CharsNoBlank | (readOnly ? ImGuiInputTextFlags_ReadOnly : 0));
+            ImGui::PushItemWidth(-1);
+            ImGuiInputTextFlags flags = 0;
+            flags |= ImGuiInputTextFlags_CharsNoBlank;
+            flags |= (readOnly ? ImGuiInputTextFlags_ReadOnly : 0);
 
+            ImGui::InputText(" Server Address", &m_ServerAddress, flags);
+            ImGui::PopItemWidth();
             ImColor color = ImColor(Walnut::UI::Colors::Theme::text);
             std::string statusString = "";
             if (status == Walnut::Client::ConnectionStatus::Connecting)
             {
                 color = ImColor(Walnut::UI::Colors::Theme::textDarker);
-                statusString = "Connecting...";
+                statusString = " Connecting...";
             }
             else if (status == Walnut::Client::ConnectionStatus::Disconnected && m_ServerConnAttempts)
             {
                 color = ImColor(Walnut::UI::Colors::Theme::textError);
-                statusString = "Failed to connect. Try Again";
+                statusString = " Failed to connect. Try Again";
             }
-
-            if (statusString != "")
-                ImGui::TextColored(color, statusString.c_str());
 
             if (ImGui::Button("Connect"))
             {
                 m_Client.ConnectToServer(m_ServerAddress);
                 m_ServerConnAttempts++;
             }
+            ImGui::SameLine();
+
+            if (statusString != "")
+                ImGui::TextColored(color, statusString.c_str());
 
             ImGui::End();
         }
@@ -99,5 +120,23 @@ namespace PixelChase
 
     void ClientLayer::OnDataReceived(const Walnut::Buffer buffer)
     {
+        Walnut::BufferStreamReader stream(buffer);
+
+        PacketType packetType;
+        stream.ReadRaw(packetType);
+
+        switch (packetType)
+        {
+        case PacketType::ClientConnect:
+        {
+            WL_INFO_TAG("Client", "Connected to server");
+            break;
+        }
+        case PacketType::ClientUpdate:
+        {
+            break;
+        }
+        break;
+        }
     }
 }

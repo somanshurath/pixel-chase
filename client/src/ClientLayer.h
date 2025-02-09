@@ -24,8 +24,9 @@ namespace PixelChase
     private:
         glm::vec2 m_PlayerPosition{0.0f, 0.0f};
         glm::vec2 m_PlayerVelocity{0.0f, 0.0f};
-        std::string m_ServerAddress;
+        std::string m_ServerAddress = "127.0.0.1:8192";
         int m_ServerConnAttempts = 0;
         Walnut::Client m_Client;
+        uint32_t m_ClientID = 0;
     };
 }
