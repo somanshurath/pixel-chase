@@ -27,6 +27,7 @@ namespace PixelChase
 
 	void ServerLayer::OnDetach()
 	{
+		s_ScratchBuffer.Release();
 		m_Server.Stop();
 	}
 
@@ -41,6 +42,7 @@ namespace PixelChase
 		m_PlayerDataMutex.unlock();
 
 		m_Server.SendBufferToAllClients(stream.GetBuffer());
+		std::this_thread::sleep_for(std::chrono::milliseconds(5));
 	}
 
 	void ServerLayer::OnUIRender()

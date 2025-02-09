@@ -35,6 +35,7 @@ namespace PixelChase
 
     void ClientLayer::OnDetach()
     {
+        s_ScratchBuffer.Release();
     }
 
     void ClientLayer::OnUpdate(float ts)
